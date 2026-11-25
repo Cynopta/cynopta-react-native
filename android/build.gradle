@@ -1,0 +1,91 @@
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+buildscript {
+    if (project == rootProject) {
+        repositories {
+            google()
+            mavenCentral()
+        }
+        dependencies {
+            classpath("com.android.tools.build:gradle:8.7.3")
+        }
+    }
+}
+
+// Ensure both this library and the host app module can resolve com.github.Cynopta:android-sdk-dist
+// without requiring manual edits to android/build.gradle or android/settings.gradle.
+try {
+    rootProject.allprojects {
+        repositories {
+            mavenLocal()
+            google()
+            mavenCentral()
+            maven { url = uri("https://jitpack.io") }
+        }
+    }
+} catch (Exception ignored) {
+    // Host project may enforce RepositoriesMode.FAIL_ON_PROJECT_REPOS in settings.gradle.
+}
+
+apply plugin: "com.android.library"
+
+def generatedCynoptaAssetsDir = layout.buildDirectory.dir("generated/cynopta_assets").get().asFile
+
+android {
+    namespace = "com.cynopta.reactnative"
+    compileSdk = Integer.parseInt(safeExtGet("compileSdkVersion", 35).toString())
+
+    defaultConfig {
+        minSdk = Math.max(24, Integer.parseInt(safeExtGet("minSdkVersion", 24).toString()))
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs += [generatedCynoptaAssetsDir]
+        }
+    }
+}
+
+// Automatically pick up cynopta.json from the React Native project root (next to package.json)
+// and bundle it into native Android assets/cynopta.json at build time.
+tasks.register("syncRootCynoptaJson") {
+    doLast {
+        File rnProjectRoot = rootProject.projectDir.parentFile
+        File rootConfig = new File(rnProjectRoot, "cynopta.json")
+        File assetsSubdirConfig = new File(rnProjectRoot, "assets/cynopta.json")
+        File appAssetsConfig = new File(rootProject.projectDir, "app/src/main/assets/cynopta.json")
+
+        File sourceConfig = null
+        if (rootConfig.exists()) {
+            sourceConfig = rootConfig
+        } else if (assetsSubdirConfig.exists()) {
+            sourceConfig = assetsSubdirConfig
+        }
+
+        generatedCynoptaAssetsDir.mkdirs()
+        File targetFile = new File(generatedCynoptaAssetsDir, "cynopta.json")
+        if (sourceConfig != null && sourceConfig.exists() && !appAssetsConfig.exists()) {
+            targetFile.bytes = sourceConfig.bytes
+        } else if (targetFile.exists()) {
+            targetFile.delete()
+        }
+    }
+}
+
+preBuild.dependsOn("syncRootCynoptaJson")
+tasks.matching { it.name.contains("Assets") }.configureEach {
+    dependsOn("syncRootCynoptaJson")
+}
+
+dependencies {
+    implementation "com.facebook.react:react-android"
+    api "com.github.Cynopta:android-sdk-dist:1.0.27"
+}

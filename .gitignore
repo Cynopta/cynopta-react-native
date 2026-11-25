@@ -1,0 +1,8 @@
+node_modules/
+lib/
+package-lock.json
+cynopta.json
+assets/cynopta.json
+android/build/
+android/.gradle/
+.DS_Store

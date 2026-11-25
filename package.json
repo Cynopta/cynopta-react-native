@@ -1,0 +1,49 @@
+{
+  "name": "@cynopta/react-native",
+  "version": "1.0.27",
+  "description": "React Native plugin for the Cynopta SDK.",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index.ts",
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cynopta-react-native.podspec",
+    "react-native.config.js",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "!android/build",
+    "!android/.gradle"
+  ],
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && tsc -p tsconfig.types.json",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "react-native",
+    "cynopta",
+    "security",
+    "fraud-prevention",
+    "bot-detection",
+    "device-integrity"
+  ],
+  "homepage": "https://cynopta.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cynopta/cynopta-react-native.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.72.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
