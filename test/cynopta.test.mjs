@@ -41,7 +41,7 @@ function createMockNative(calls, opts = {}) {
     },
     async getVersionName() {
       calls.push(['getVersionName']);
-      return '1.0.27';
+      return '1.0.28';
     },
     async getVersionCode() {
       calls.push(['getVersionCode']);
@@ -104,7 +104,7 @@ test('forwards all methods, binds nonce, and verifies sealed packets on Android'
     await Cynopta.stop({ deleteAllData: true });
     assert.equal(await Cynopta.isStarted(), true);
     assert.equal(await Cynopta.isAuthorized(), true);
-    assert.equal(await Cynopta.getVersionName(), '1.0.27');
+    assert.equal(await Cynopta.getVersionName(), '1.0.28');
     assert.equal(await Cynopta.getVersionCode(), 28);
 
     const license = await Cynopta.getLicenseResult();

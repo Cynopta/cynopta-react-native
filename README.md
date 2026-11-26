@@ -8,13 +8,13 @@ Automatically bundles the native Cynopta SDK (`com.github.Cynopta:android-sdk-di
 
 ### 1. Install the Plugin
 ```bash
-npm install https://github.com/Cynopta/cynopta-react-native.git#v1.0.27
+npm install https://github.com/Cynopta/cynopta-react-native.git#v1.0.28
 ```
 Or in `package.json`:
 ```json
 {
   "dependencies": {
-    "@cynopta/react-native": "https://github.com/Cynopta/cynopta-react-native.git#v1.0.27"
+    "@cynopta/react-native": "https://github.com/Cynopta/cynopta-react-native.git#v1.0.28"
   }
 }
 ```

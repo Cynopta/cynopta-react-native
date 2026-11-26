@@ -237,7 +237,7 @@ export const Cynopta = {
     return normalizeLicenseResult(await mod.getLicenseResult());
   },
 
-  /** Returns the native Cynopta SDK version string (e.g. `"1.0.27"`). */
+  /** Returns the native Cynopta SDK version string (e.g. `"1.0.28"`). */
   async getVersionName(): Promise<string> {
     if (!isSupportedMobilePlatform()) return '';
     const mod = getNativeCynoptaModule();
